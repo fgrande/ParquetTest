@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Parquet.Data;
 using Parquet.Schema;
 using Parquet.Serialization;
+using System.Runtime.InteropServices;
 
 namespace ParquetFile;
 
@@ -23,6 +24,15 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        string _tmpBase = "/tmp/";
+        if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+        {
+            _tmpBase = @"c:\temp\";
+        }
+
+        string _csvFileName = $"{_tmpBase}/data.csv";
+        string _parFileName = $"{_tmpBase}/data.parquet";
+
         var data = Enumerable.Range(0, 1_000_000).Select(i => new Record
         {
             Timestamp = DateTime.UtcNow.AddSeconds(i),
@@ -31,7 +41,7 @@ class Program
         }).ToList();
 
         // Write data to a csv file 
-        using (StreamWriter sw = new StreamWriter("/tmp/data.csv"))
+        using (StreamWriter sw = new StreamWriter(_csvFileName))
         {
             foreach (Record r in data)
             {
@@ -41,9 +51,9 @@ class Program
         }
         ;
 
-        await ParquetSerializer.SerializeAsync(data, "/tmp/data.parquet");
+        await ParquetSerializer.SerializeAsync(data, _parFileName);
 
-        IList<Record> readData = ParquetSerializer.DeserializeAsync<Record>("/tmp/data.parquet").Result;
+        IList<Record> readData = ParquetSerializer.DeserializeAsync<Record>(_parFileName).Result;
 
         foreach (Record r in readData)
         {
