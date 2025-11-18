@@ -49,7 +49,7 @@ class Program
         string _parFileName = $"{_tmpBase}/data.parquet";
 
 
-        var data = Enumerable.Range(0, 1_000_000).Select(i => new Record
+        var data = Enumerable.Range(0, 10_000_000).Select(i => new Record
         {
             Timestamp = DateTime.UtcNow.AddSeconds(i),
             EventName = i % 2 == 0 ? "on" : "off",
