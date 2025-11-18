@@ -82,8 +82,6 @@ class Program
         _elapsed = DateTime.Now - _startTime;
         Console.WriteLine($"Data Read from Parquet in {_elapsed.TotalSeconds} seconds");
 
-
-
         // Write Parquet file line by line - This is compatible with rel 4.17
         _startTime = DateTime.Now;
         string _parLineFileName = $"{_tmpBase}/data_line.parquet";
